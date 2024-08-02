@@ -1,2 +1,2 @@
 # TypeSafe
-A simple compiler to allow you to compile JavaScript with optional Python-like type hints to vanilla JavaScript with runtime type validation.
+TypeSafe is a language (technically) created solely to bring Python-like type hints to JavaScript, at runtime. This 'compiler' simply passes your TypeSafe code into valid JavaScript, with proper runtime type checking.
