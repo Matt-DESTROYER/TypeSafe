@@ -4,7 +4,7 @@
 	"description": "A simple CLI tool to allow writing Python-like type annotations to JS.",
 	"main": "./index.mjs",
 	"bin": {
-		"typing": "./cli-tool.mjs"
+		"typing": "cli-tool.mjs"
 	},
 	"scripts": {
 		"test": "node ./tests/index.mjs"
