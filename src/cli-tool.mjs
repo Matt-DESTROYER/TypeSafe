@@ -21,12 +21,13 @@ try {
 	const output = compile(input);
 
 	// get the output file (either from the input file or by adding `.out` before the file extension)
-	let output_file = input_file.split(".");
+	let output_file = null;
 	const output_arg = args.indexOf("-o");
 	if (output_arg !== -1) {
 		output_file = args[output_arg+1];
 	} else {
-		output_file[0] += ".out";
+		output_file = input_file.split(".")
+		output_file[output_file.length-1] = "out." + output_file[output_file.length-1];
 		output_file = output_file.join(".");
 	}
 	

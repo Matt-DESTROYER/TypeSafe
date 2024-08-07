@@ -299,5 +299,5 @@ export {
 	parse_variable,
 	parse_for_loop,
 	parse_function,
-	compile as default
+	compile
 };
