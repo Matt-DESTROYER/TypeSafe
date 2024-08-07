@@ -1,4 +1,4 @@
-import compile from "../compiler.mjs";
+import { compile } from "../compiler.mjs";
 
 import { readdirSync as readDir, existsSync as exists, readFileSync as read, writeFileSync as write } from "node:fs";
 import { expect } from "./test.mjs";
