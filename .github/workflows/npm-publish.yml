@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    shell: bash
+    working-directory: ./src
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -13,11 +18,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          working-directory: "/src"
       - run: npm ci
       - run: npm test
 
-  publish-npm:
+  npm-publish:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +29,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          working-directory: "/src"
           registry-url: https://registry.npmjs.org/
           scope: "@matthewjames/typesafe"
       - run: npm ci
