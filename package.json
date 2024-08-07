@@ -1,5 +1,5 @@
 {
-	"name": "typesafe",
+	"name": "typesafe-cli",
 	"version": "1.0.0",
 	"description": "A simple CLI tool to allow writing Python-like type annotations to JS.",
 	"main": "./index.mjs",
