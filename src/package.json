@@ -1,15 +1,21 @@
 {
 	"name": "typesafe-cli",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A simple CLI tool to allow writing Python-like type annotations to JS.",
-	"main": "./index.mjs",
+	"main": "./compiler.mjs",
 	"bin": {
-		"typing": "cli-tool.mjs"
+		"typing": "./cli-tool.mjs"
 	},
+	"type": "module",
 	"scripts": {
 		"test": "node ./tests/index.mjs"
 	},
 	"keywords": ["types", "typing"],
-	"author": "Matthew James",
+	"author": {
+		"name": "Matthew James",
+		"email": "mattdestroyerpro@gmail.com",
+		"url": "https://mattdestroyer.replit.app"
+	},
+	"contributors": [],
 	"license": "MIT"
 }

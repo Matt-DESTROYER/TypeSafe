@@ -34,11 +34,12 @@ function multiply(x: number, y: number): number {
 This project is a work-in-progress, it is not yet even _near_ close to completion.
 
 ### Current capabilities
- - Variable declarations: The compiler can currently add proper type checking for variable _declarations_. This solely means checking that a variable is the correct type _after_ it is declared. In future this will aim to check type on an assignment operation.
+ - Variable declarations: The compiler can currently add proper type checking for single variable _declarations_ (will not work when multiple variables are declared using commas, also will not work for more complex assignments such as multiline functions, chained expressions, etc). This solely means checking that a variable is the correct type _after_ it is declared. In future this will aim to check type on every assignment operation (although this will dramatically increase bloat...).
  - Basic functions: The compiler can currently add proper type checking for a basic function declaration, including parameters and a return type. This does not include lambda (squid) functions.
 
 ### Future capabilities
  - For loops: The compiler should be able to perform type checking for variables declared inside of any `for` loop.
+ - Arrays: The compiler should be able to perform type checking for arrays, allowing statically typed arrays.
 
 ## Pros and Cons
 ### Why use TypeSafe?

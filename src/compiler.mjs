@@ -1,14 +1,12 @@
-// new TypeError("[func] Expected argument `arg` to be of type `type`.");
-
 // CONSTANTS
-const BUILTIN_TYPES          = Object.freeze(["boolean", "number", "bigint", "string", "symbol", "undefined"]);
-const WHITESPACE             = Object.freeze([/* space */ " ", /* tab */ "	"]);
+const BUILTIN_TYPES          = Object.freeze(["boolean", "number", "bigint", "string", "function", "symbol", "undefined"]);
+//const WHITESPACE             = Object.freeze([/* space */ " ", /* tab */ "	"]);
 const VARIABLE_KEYWORDS      = Object.freeze(["var", "let", "const"]);
 const ARGUMENT_DELIMITERS    = Object.freeze([",", "=", ":"]);
 const RETURN_TYPE_DELIMITERS = Object.freeze(["=", "{"]);
 const VARIABLE_REGEX         = /(var|let|const) [_a-zA-Z].* *: *[_a-zA-Z].*( *= *.*)(;|\n)/gm;
 const FUNCTION_REGEX         = /function( [_a-zA-Z].*)? *\(.*\)( *: *[_a-zA-Z].*)? *\{(.|\n)*\}/gm;
-const WHITESPACE_REGEX       = /\s/;
+const WHITESPACE_REGEX       = /\s+/;
 const RETURN_REGEX           = /return .*(;|\n|\})/gm;
 
 // a function to detect indentation of a line
@@ -109,13 +107,15 @@ function parse_for_loop(content) {
 	const for_loop_start = content.indexOf("for");
 	if (for_loop_start === -1) {
 		return {
-			result: content,
-			name: null,
-			type: null
+			result: content
 		};
 	}
 
 	// TODO: actually implement...
+	// TEMP
+	return {
+		result: content
+	};
 }
 
 // parse a function declaration
@@ -285,7 +285,8 @@ ${indentation}}
 
 	return {
 		result: fully_typed_function,
-		return_type: return_type
+		return_type: return_type,
+		parameters: parameters
 	};
 }
 
@@ -296,6 +297,8 @@ function compile(code) {
 }
 
 export {
+	BUILTIN_TYPES,
+	VARIABLE_KEYWORDS,
 	parse_variable,
 	parse_for_loop,
 	parse_function,
