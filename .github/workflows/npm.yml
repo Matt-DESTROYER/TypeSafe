@@ -21,7 +21,7 @@ jobs:
       - run: npm ci
       - run: npm test
 
-  npm-publish:
+  publish:
     needs: test
     runs-on: ubuntu-latest
     steps:
