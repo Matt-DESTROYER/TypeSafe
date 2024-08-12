@@ -70,7 +70,7 @@ function parse_variable(content) {
 	// if type is any, don't add type any logic
 	if (type.toLowerCase() === "any") {
 		return {
-			result: content,
+			result: variable_definition,
 			name: variable_name,
 			type: "any"
 		};
@@ -257,13 +257,15 @@ ${indentation}}
 	// now to handle return type...
 
 	// since there could be multiple returns, easier to handle with RegEx
-	const fully_typed_function = type_checked_parameters.replaceAll(RETURN_REGEX, function(content) {
-		let return_value = indentation + indentation + "const return_value = " + content.substring(7);
-		if (!return_value.endsWith(";\n")) {
-			return_value  += ";\n";
-		}
-		if (BUILTIN_TYPES.includes(return_type.toLowerCase())) {
-			return `{
+	let fully_typed_function = type_checked_parameters;
+	if (return_type) {
+		fully_typed_function = fully_typed_function.replaceAll(RETURN_REGEX, function(content) {
+			let return_value = `${indentation}${indentation}const return_value = ${content.substring(7)}`;
+			if (!return_value.endsWith(";\n")) {
+				return_value  += ";\n";
+			}
+			if (BUILTIN_TYPES.includes(return_type.toLowerCase())) {
+				return `{
 ${return_value}
 ${indentation}${indentation}if (typeof return_value !== "${return_type.toLowerCase()}") {
 ${indentation}${indentation}${indentation}throw new TypeError("[${function_name}] Expected return type \`${return_type}\` but returned type " + (typeof return_value) + ".");
@@ -274,14 +276,15 @@ ${indentation}}
 		} else {
 			return `{
 ${return_value}
-${indentation}${indentation}if (!(${return_value} instanceof ${return_type})) {
+${indentation}${indentation}if (!(return_value instanceof ${return_type})) {
 ${indentation}${indentation}${indentation}throw new TypeError("[" + ${function_name} + "] Expected return type \`${return_type}\` but returned type " + (${return_value}.constructor.name) + ".");
 ${indentation}${indentation}}
 ${indentation}${indentation}return return_value;
 ${indentation}}
 `;
-		}
-	});
+			}
+		});
+	}
 
 	return {
 		result: fully_typed_function,

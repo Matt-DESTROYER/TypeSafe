@@ -10,7 +10,7 @@ for (let i = 0; i < TEST_FILES.length; i++) {
 	// for of (we need the `i` for storing all tests)
 	const test = TEST_FILES[i];
 
-	if (!exists("./tests/expected_output/" + test)) {
+	if (!exists(`./tests/expected_output/${test}`)) {
 		console.warn(`%cExpected output for test '${test}' does not exist...`, "color: red;");
 		continue;
 	} else {
