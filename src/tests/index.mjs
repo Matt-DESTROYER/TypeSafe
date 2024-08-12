@@ -11,8 +11,10 @@ for (let i = 0; i < TEST_FILES.length; i++) {
 	const test = TEST_FILES[i];
 
 	if (!exists("./tests/expected_output/" + test)) {
-		console.warn(`Expected output for test '${test}' does not exist...`);
+		console.warn(`%cExpected output for test '${test}' does not exist...`, "color: red;");
 		continue;
+	} else {
+		console.info(`%cRunning test '${test}'...`, "color: green;");
 	}
 
 	// read in the input and expected output
@@ -28,6 +30,11 @@ for (let i = 0; i < TEST_FILES.length; i++) {
 	// check if the output is correct
 	TESTS[i] = expect(output.replaceAll(/\s/g, ""))
 		.toBe(expected.replaceAll(/\s/g, ""));
+	if (TESTS[i]) {
+		console.info(`%cPassed successfully!`, "color: green;");
+	} else {
+		console.error(`%cFailed...`, "color: red;");
+	}
 }
 
 // check how many tests passed
