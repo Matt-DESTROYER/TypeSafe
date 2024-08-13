@@ -35,19 +35,26 @@ function parse_variable(content) {
 			type: null
 		};
 	}
-	// get the variable's name
-	const variable_name = content
-		.substring(content.indexOf(" ", declaration_start) + 1, type_begin)
-		.trim();
 	// find type definition's start
 	const type_begin = content.indexOf(":", declaration_start);
 	// if no type definition, just return the original content
 	if (type_begin === -1) {
-		return {
+		// get the variable's name
+		const variable_name_start = content.indexOf(" ", declaration_start) + 1;
+		const variable_name = content
+			.substring(
+				variable_name_start,
+				Math.max(
+					content.indexOf("=", variable_name_start),
+					content.indexOf(";", variable_name_start)
+				)
+			)
+			.trim();
+		return Object.freeze({
 			result: content,
 			name: variable_name,
 			type: "any"
-		};
+		});
 	}
 
 	// locate the type definition's end
@@ -61,6 +68,11 @@ function parse_variable(content) {
 
 	// get the type
 	const type = content.substring(type_begin + 1, type_end).trim();
+
+	// get the variable's name
+	const variable_name = content
+		.substring(content.indexOf(" ", declaration_start) + 1, type_begin)
+		.trim();
 
 	// reconstruct a valid variable declaration
 	const variable_definition =
