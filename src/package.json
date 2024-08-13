@@ -17,5 +17,12 @@
 		"url": "https://mattdestroyer.replit.app"
 	},
 	"contributors": [],
-	"license": "MIT"
+	"license": "MIT",
+	"publishConfig": {
+		"registry": "https://npm.pkg.github.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Matt-DESTROYER/TypeSafe.git"
+	}
 }
