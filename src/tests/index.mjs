@@ -22,7 +22,14 @@ for (let i = 0; i < TEST_FILES.length; i++) {
 	const expected = read(`./tests/expected_output/${test}`, "utf-8");
 
 	// get the output
-	const output = compile(input);
+	let output = null;
+	try {
+		output = compile(input);
+	} catch (error) {
+		console.error(`%cAn unexpected error occurred during compilation...\n${error}`, "color: red;");
+		TESTS[i] = false;
+		continue;
+	}
 
 	// write the actual output to the respective file
 	write(`./tests/output/${test}`, output);
@@ -33,7 +40,7 @@ for (let i = 0; i < TEST_FILES.length; i++) {
 	if (TESTS[i]) {
 		console.info(`%cPassed successfully!`, "color: green;");
 	} else {
-		console.error(`%cFailed...`, "color: red;");
+		console.error(`%cOutput doesn't match expected...`, "color: red;");
 	}
 }
 

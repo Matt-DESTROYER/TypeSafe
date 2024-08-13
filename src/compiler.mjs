@@ -5,7 +5,7 @@ const VARIABLE_KEYWORDS      = Object.freeze(["var", "let", "const"]);
 const ARGUMENT_DELIMITERS    = Object.freeze([",", "=", ":"]);
 const RETURN_TYPE_DELIMITERS = Object.freeze(["=", "{"]);
 const VARIABLE_REGEX         = /(var|let|const) [_a-zA-Z].* *: *[_a-zA-Z].*( *= *.*)(;|\n)/gm;
-const FUNCTION_REGEX         = /function( [_a-zA-Z].*)? *\(.*\)( *: *[_a-zA-Z].*)? *\{(.|\n)*\}/gm;
+const FUNCTION_REGEX         = /function( [_a-zA-Z].*)? *\(.*\)( *(:|->) *[_a-zA-Z].*)? *\{(.|\n)*\}/gm;
 const WHITESPACE_REGEX       = /\s+/;
 const RETURN_REGEX           = /return .*(;|\n|\})/gm;
 
@@ -188,10 +188,14 @@ function parse_function(content) {
 	let return_type = "", return_type_idx = -1;
 	// start looking at the end of the parameters
 	for (let i = parameters_end; i < valid_parameters.length; i++) {
-		// if we find a colon, we've found a return type
-		if (valid_parameters[i] === ":") {
+		// if we find `:` or `->`, we've found a return type
+		if (valid_parameters[i] === ":" ||
+			valid_parameters.substring(i, i+2) === "->") {
 			// grab the return type
 			i++;
+			if (valid_parameters[i] === ">") {
+				i++;
+			}
 			while (i < valid_parameters.length && !RETURN_TYPE_DELIMITERS.includes(valid_parameters[i])) {
 				return_type += valid_parameters[i];
 				i++;
@@ -277,7 +281,7 @@ ${indentation}}
 			return `{
 ${return_value}
 ${indentation}${indentation}if (!(return_value instanceof ${return_type})) {
-${indentation}${indentation}${indentation}throw new TypeError("[" + ${function_name} + "] Expected return type \`${return_type}\` but returned type " + (${return_value}.constructor.name) + ".");
+${indentation}${indentation}${indentation}throw new TypeError("[${function_name}] Expected return type \`${return_type}\` but returned type " + (return_value.constructor.name) + ".");
 ${indentation}${indentation}}
 ${indentation}${indentation}return return_value;
 ${indentation}}
