@@ -1,6 +1,6 @@
 // CONSTANTS
 const BUILTIN_TYPES          = Object.freeze(["boolean", "number", "bigint", "string", "function", "symbol", "undefined"]);
-//const WHITESPACE             = Object.freeze([/* space */ " ", /* tab */ "	"]);
+// const WHITESPACE             = Object.freeze([/* space */ " ", /* tab */ "	"]);
 const VARIABLE_KEYWORDS      = Object.freeze(["var", "let", "const"]);
 const ARGUMENT_DELIMITERS    = Object.freeze([",", "=", ":"]);
 const RETURN_TYPE_DELIMITERS = Object.freeze(["=", "{"]);
@@ -27,6 +27,7 @@ function parse_variable(content) {
 		}
 		return -1;
 	})();
+	// if it isn't, don't change the content (who knows what we've been given...)
 	if (declaration_start === -1) {
 		return {
 			result: content,
@@ -34,6 +35,10 @@ function parse_variable(content) {
 			type: null
 		};
 	}
+	// get the variable's name
+	const variable_name = content
+		.substring(content.indexOf(" ", declaration_start) + 1, type_begin)
+		.trim();
 	// find type definition's start
 	const type_begin = content.indexOf(":", declaration_start);
 	// if no type definition, just return the original content
@@ -57,11 +62,6 @@ function parse_variable(content) {
 	// get the type
 	const type = content.substring(type_begin + 1, type_end).trim();
 
-	// get the variable's name
-	const variable_name = content
-		.substring(content.indexOf(" ", declaration_start) + 1, type_begin)
-		.trim();
-
 	// reconstruct a valid variable declaration
 	const variable_definition =
 		content.substring(0, type_begin).trim() +
@@ -69,11 +69,11 @@ function parse_variable(content) {
 
 	// if type is any, don't add type any logic
 	if (type.toLowerCase() === "any") {
-		return {
+		return Object.freeze({
 			result: variable_definition,
 			name: variable_name,
 			type: "any"
-		};
+		});
 	}
 
 	// add type safety checking
@@ -94,11 +94,11 @@ function parse_variable(content) {
 	}
 
 	// return the new valid definition plus the logic to double check type
-	return {
+	return Object.freeze({
 		result: variable_definition.trimEnd() + "\n" + type_code,
 		name: variable_name,
 		type: type
-	};
+	});
 }
 
 // parse a for loop
@@ -106,16 +106,16 @@ function parse_for_loop(content) {
 	// check if the content is actually a for loop
 	const for_loop_start = content.indexOf("for");
 	if (for_loop_start === -1) {
-		return {
+		return Object.freeze({
 			result: content
-		};
+		});
 	}
 
 	// TODO: actually implement...
 	// TEMP
-	return {
+	return Object.freeze({
 		result: content
-	};
+	});
 }
 
 // parse a function declaration
@@ -158,9 +158,11 @@ function parse_function(content) {
 	const function_def_start = content.indexOf("function");
 	// if this is not a function definition, just return the original content
 	if (function_def_start === -1) {
-		return {
-			result: content
-		};
+		return Object.freeze({
+			result: content,
+			return_type: null,
+			parameters: null
+		});
 	}
 
 	// find where the function's parameters start and end
@@ -290,11 +292,11 @@ ${indentation}}
 		});
 	}
 
-	return {
+	return Object.freeze({
 		result: fully_typed_function,
 		return_type: return_type,
 		parameters: parameters
-	};
+	});
 }
 
 function compile(code) {
