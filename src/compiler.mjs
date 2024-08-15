@@ -1,5 +1,5 @@
 // CONSTANTS
-const BUILTIN_TYPES          = Object.freeze(["boolean", "number", "bigint", "string", "function", "symbol", "undefined"]);
+const BUILTIN_TYPES          = Object.freeze(["boolean", "number", "bigint", "string", "undefined", "function", "symbol", "object", "null"]);
 // const WHITESPACE             = Object.freeze([/* space */ " ", /* tab */ "	"]);
 const VARIABLE_KEYWORDS      = Object.freeze(["var", "let", "const"]);
 const ARGUMENT_DELIMITERS    = Object.freeze([",", "=", ":"]);
@@ -22,18 +22,27 @@ function write_type_check(value, type, options = {}) {
 	options.label ||= value + ": " + type;
 	
 	type = type.trim();
+
+	if (!("optional" in options)) {
+		options.optional = (type[0] === "?");
+		if (options.optional) {
+			type = type.substring(1);
+		}
+	}
+
+	const OPTIONAL = options.optional ? ` && (typeof ${value} !== undefined)` : "";
 	
 	if (BUILTIN_TYPES.includes(type.toLowerCase())) {
-		return `${options.current_indentation}if (typeof ${value} !== "${type}") {
+		return `${options.current_indentation}if (typeof ${value} !== "${type}"${OPTIONAL}) {
 ${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (typeof ${value}) + "'.");
 ${options.current_indentation}}
 ${options.current_indentation}`;
 	} else if (type.toLowerCase() == "array") {
-		return `${options.current_indentation}if (!Array.isArray(${value})) {
+		return `${options.current_indentation}if (!Array.isArray(${value})${OPTIONAL}) {
 ${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (${value}.constructor.name) + "'.");
 ${options.current_indentation}}`;
 	} else {
-		return `${options.current_indentation}if (!(${value} instanceof ${type})) {
+		return `${options.current_indentation}if (!(${value} instanceof ${type})${OPTIONAL}) {
 ${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (${value}.constructor.name) + "'.");
 ${options.current_indentation}}`;
 	}

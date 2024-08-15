@@ -13,14 +13,14 @@ if (typeof a !== "number") {
 if (typeof b !== "boolean") {
 	throw new TypeError("[b: boolean] Expected type 'boolean', but got '" + (typeof b) + "'.");
 }
-if (typeof c !== "string") {
-	throw new TypeError("[c: string] Expected type 'string', but got '" + (typeof c) + "'.");
+if (typeof c !== "string" && (typeof c !== undefined)) {
+	throw new TypeError("[c: ?string] Expected type 'string', but got '" + (typeof c) + "'.");
 }
 
 	{
 		const return_value = new Result(a, b, c);
 if (!(return_value instanceof Result)) {
-	throw new TypeError("[some_function(a: number, b: boolean, c: string)] Expected type 'Result', but got '" + (return_value.constructor.name) + "'.");
+	throw new TypeError("[some_function(a: number, b: boolean, c: ?string)] Expected type 'Result', but got '" + (return_value.constructor.name) + "'.");
 }
 		return return_value;
 	}
