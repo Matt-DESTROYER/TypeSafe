@@ -17,9 +17,15 @@ function line_indentation(line) {
 
 // write the type checking code for some value
 function write_type_check(value, type, options = {}) {
-	options.indentation ||= "	";
-	options.current_indentation ||= "";
-	options.label ||= value + ": " + type;
+	if (!("indentation" in options)) {
+		options.indentation = "	";
+	}
+	if (!("current_indentation" in options)) {
+		options.current_indentation = "";
+	}
+	if (!("label" in options)) {
+		options.label = value + ": " + type;
+	}
 	
 	type = type.trim();
 
