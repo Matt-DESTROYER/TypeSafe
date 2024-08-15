@@ -1,5 +1,4 @@
 name: NPM Publish
-
 # attempt to publish every commit to NPM (will only succeed when version is bumped)
 on:
 	push:
@@ -10,8 +9,6 @@ defaults:
 	run:
 		shell: bash
 		working-directory: ./src
-	with:
- 		node-version: 20
 # steps
 jobs:
 	# run tests
@@ -20,6 +17,8 @@ jobs:
 		steps:
 			- uses: "actions/checkout@v4"
 	 		- uses: "actions/setup-node@v4"
+				with:
+			 		node-version: 20
 			- run: npm ci
 			- run: npm test
 	# publish to npm (will fail if version not bumped)
@@ -30,6 +29,7 @@ jobs:
 			- uses: actions/checkout@v4
 			- uses: actions/setup-node@v4
 				with:
+					node-version: 20
 					registry-url: https://registry.npmjs.org/
 					scope: "@matthewjames/typesafe-cli"
 			- run: cp ../README.md ./
