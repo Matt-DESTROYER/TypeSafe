@@ -1,15 +1,12 @@
 name: NPM Publish
-
 on:
   push:
     branches:
       - main
-
 defaults:
   run:
     shell: bash
     working-directory: ./src
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,7 +17,6 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm test
-
   publish:
     needs: test
     runs-on: ubuntu-latest
