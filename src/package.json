@@ -4,13 +4,16 @@
 	"description": "A simple CLI tool to allow writing Python-like type annotations to JS.",
 	"main": "./compiler.mjs",
 	"bin": {
-		"typing": "./cli-tool.mjs"
+		"typing": "cli-tool.mjs"
 	},
 	"type": "module",
 	"scripts": {
 		"test": "node ./tests/index.mjs"
 	},
-	"keywords": ["types", "typing"],
+	"keywords": [
+		"types",
+		"typing"
+	],
 	"author": {
 		"name": "Matthew James",
 		"email": "mattdestroyerpro@gmail.com",
