@@ -6,6 +6,5 @@ class Foo {
 
 const foo = new Foo("bar");
 if (!(foo instanceof Foo)) {
-	throw new TypeError("[foo] Expected type `Foo` but got `" + (foo.constructor.name) + "`.");
+	throw new TypeError("[foo: Foo] Expected type 'Foo', but got '" + (foo.constructor.name) + "'.");
 }
-

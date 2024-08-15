@@ -15,6 +15,30 @@ function line_indentation(line) {
 	return match ? match[0] : "";
 }
 
+// write the type checking code for some value
+function write_type_check(value, type, options = {}) {
+	options.indentation ||= "	";
+	options.current_indentation ||= "";
+	options.label ||= value + ": " + type;
+	
+	type = type.trim();
+	
+	if (BUILTIN_TYPES.includes(type.toLowerCase())) {
+		return `${options.current_indentation}if (typeof ${value} !== "${type}") {
+${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (typeof ${value}) + "'.");
+${options.current_indentation}}
+${options.current_indentation}`;
+	} else if (type.toLowerCase() == "array") {
+		return `${options.current_indentation}if (!Array.isArray(${value})) {
+${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (${value}.constructor.name) + "'.");
+${options.current_indentation}}`;
+	} else {
+		return `${options.current_indentation}if (!(${value} instanceof ${type})) {
+${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (${value}.constructor.name) + "'.");
+${options.current_indentation}}`;
+	}
+}
+
 // parse a variable declaration
 function parse_variable(content) {
 	// check if the content is actually a variable declaration
@@ -89,21 +113,7 @@ function parse_variable(content) {
 	}
 
 	// add type safety checking
-	let type_code = "";
-	// if type is a built-in type
-	if (BUILTIN_TYPES.includes(type.toLowerCase())) {
-		// use typeof
-		type_code = `if (typeof ${variable_name} !== "${type}") {
-	throw new TypeError("[${variable_name}] Expected type \`${type}\` but got \`" + (typeof ${variable_name}) + "\`.");
-}
-`;
-	} else {
-		// if type is a custom type, use instanceof
-		type_code = `if (!(${variable_name} instanceof ${type})) {
-	throw new TypeError("[${variable_name}] Expected type \`${type}\` but got \`" + (${variable_name}.constructor.name) + "\`.");
-}
-`;
-	}
+	const type_code = write_type_check(variable_name, type);
 
 	// return the new valid definition plus the logic to double check type
 	return Object.freeze({
@@ -255,19 +265,7 @@ function parse_function(content) {
 	let type_code = "\n";
 	for (let i = 0; i < parameters.length; i += 2) {
 		// if the parameter is a built-in type
-		if (BUILTIN_TYPES.includes(parameters[i + 1].toLowerCase())) {
-			// use typeof
-			type_code += `${indentation}if (typeof ${parameters[i]} !== "${parameters[i + 1].toLowerCase()}") {
-${indentation}${indentation}throw new TypeError("[${function_name}] Expected type \`${parameters[i + 1]}\` but got \`" + (typeof ${parameters[i]}) + "\`.");
-${indentation}}
-`;
-		} else {
-			// if the parameter is a custom type, use instanceof
-			type_code += `${indentation}if (!(${parameters[i]} instanceof ${parameters[i + 1]})) {
-${indentation}${indentation}throw new TypeError("[${function_name}] Expected type \`${parameters[i + 1]}\` but got \`" + (${parameters[i]}.constructor.name) + "\`.");
-${indentation}}
-`;
-		}
+		type_code += write_type_check(parameters[i], parameters[i+1], { indentation: indentation });
 	}
 
 	const type_checked_parameters = valid_function_definition.substring(0, function_start+1) + type_code + valid_function_definition.substring(function_start+1);
@@ -278,29 +276,16 @@ ${indentation}}
 	let fully_typed_function = type_checked_parameters;
 	if (return_type) {
 		fully_typed_function = fully_typed_function.replaceAll(RETURN_REGEX, function(content) {
-			let return_value = `${indentation}${indentation}const return_value = ${content.substring(7)}`;
-			if (!return_value.endsWith(";\n")) {
-				return_value  += ";\n";
+			let return_value = `${indentation}${indentation}const return_value = ${content.substring(7)}`.trimEnd();
+			if (!return_value.endsWith(";")) {
+				return_value  += ";";
 			}
-			if (BUILTIN_TYPES.includes(return_type.toLowerCase())) {
-				return `{
-${return_value}
-${indentation}${indentation}if (typeof return_value !== "${return_type.toLowerCase()}") {
-${indentation}${indentation}${indentation}throw new TypeError("[${function_name}] Expected return type \`${return_type}\` but returned type " + (typeof return_value) + ".");
-${indentation}${indentation}}
-${indentation}${indentation}return return_value;
-${indentation}}
-`;
-		} else {
 			return `{
 ${return_value}
-${indentation}${indentation}if (!(return_value instanceof ${return_type})) {
-${indentation}${indentation}${indentation}throw new TypeError("[${function_name}] Expected return type \`${return_type}\` but returned type " + (return_value.constructor.name) + ".");
-${indentation}${indentation}}
+${write_type_check("return_value", return_type, { indentation: indentation, label: function_name })}
 ${indentation}${indentation}return return_value;
 ${indentation}}
 `;
-			}
 		});
 	}
 
