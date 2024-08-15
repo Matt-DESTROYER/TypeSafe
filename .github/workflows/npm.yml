@@ -1,27 +1,26 @@
 name: NPM Publish
-# attempt to publish every commit to NPM (will only succeed when version is bumped)
+
 on:
   push:
     branches:
       - main
-# ensure the cwd is always `/src`
+
 defaults:
   run:
     shell: bash
     working-directory: ./src
-# steps
+
 jobs:
-  # run tests
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v4"
-       - uses: "actions/setup-node@v4"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-           node-version: 20
+          node-version: 20
       - run: npm ci
       - run: npm test
-  # publish to npm (will fail if version not bumped)
+
   publish:
     needs: test
     runs-on: ubuntu-latest
