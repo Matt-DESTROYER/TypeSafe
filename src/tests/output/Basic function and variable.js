@@ -15,7 +15,6 @@ if (typeof return_value !== "number") {
 		return return_value;
 	}
 }
-
 const str = "hello";
 if (typeof str !== "string") {
 	throw new TypeError("[str: string] Expected type 'string', but got '" + (typeof str) + "'.");

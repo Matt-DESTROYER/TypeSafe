@@ -22,6 +22,7 @@ if (typeof c !== "string" && (typeof c !== undefined)) {
 if (!(return_value instanceof Result)) {
 	throw new TypeError("[some_function(a: number, b: boolean, c: ?string)] Expected type 'Result', but got '" + (return_value.constructor.name) + "'.");
 }
+
 		return return_value;
 	}
 }

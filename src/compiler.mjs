@@ -1,10 +1,10 @@
 // CONSTANTS
 const BUILTIN_TYPES          = Object.freeze(["boolean", "number", "bigint", "string", "undefined", "function", "symbol", "object", "null"]);
-// const WHITESPACE             = Object.freeze([/* space */ " ", /* tab */ "	"]);
+const WHITESPACE             = Object.freeze([/* space */ " ", /* tab */ "	"]);
 const VARIABLE_KEYWORDS      = Object.freeze(["var", "let", "const"]);
 const ARGUMENT_DELIMITERS    = Object.freeze([",", "=", ":"]);
 const RETURN_TYPE_DELIMITERS = Object.freeze(["=", "{"]);
-const VARIABLE_REGEX         = /(var|let|const) [_a-zA-Z].* *: *[_a-zA-Z].*( *= *.*)(;|\n)/gm;
+const VARIABLE_REGEX         = /\n?( |\t)*(var|let|const) [_a-zA-Z].* *: *[_a-zA-Z].*( *= *.*)(;|\n)/gm;
 const FUNCTION_REGEX         = /function( [_a-zA-Z].*)? *\(.*\)( *(:|->) *[_a-zA-Z].*)? *\{(.|\n)*\}/gm;
 const WHITESPACE_REGEX       = /\s+/;
 const RETURN_REGEX           = /return .*(;|\n|\})/gm;
@@ -46,11 +46,13 @@ ${options.current_indentation}`;
 	} else if (type.toLowerCase() == "array") {
 		return `${options.current_indentation}if (!Array.isArray(${value})${OPTIONAL}) {
 ${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (${value}.constructor.name) + "'.");
-${options.current_indentation}}`;
+${options.current_indentation}}
+${options.current_indentation}`;
 	} else {
 		return `${options.current_indentation}if (!(${value} instanceof ${type})${OPTIONAL}) {
 ${options.current_indentation}${options.indentation}throw new TypeError("[${options.label}] Expected type '${type}', but got '" + (${value}.constructor.name) + "'.");
-${options.current_indentation}}`;
+${options.current_indentation}}
+${options.current_indentation}`;
 	}
 }
 
@@ -65,6 +67,15 @@ function parse_variable(content) {
 			}
 		}
 		return -1;
+	})();
+	// find the indentation of the line
+	const indent = (function findIndent() {
+		let indent = "", i = content[0] === "\n" ? 1 : 0;
+		while (WHITESPACE.includes(content[i])) {
+			indent += content[i];
+			i++;
+		}
+		return indent;
 	})();
 	// if it isn't, don't change the content (who knows what we've been given...)
 	if (declaration_start === -1) {
@@ -128,7 +139,7 @@ function parse_variable(content) {
 	}
 
 	// add type safety checking
-	const type_code = write_type_check(variable_name, type);
+	const type_code = write_type_check(variable_name, type, { current_indentation: indent });
 
 	// return the new valid definition plus the logic to double check type
 	return Object.freeze({
