@@ -1,3 +1,8 @@
+[![Version](https://img.shields.io/npm/v/typesafe-cli.svg?style=flat)](https://www.npmjs.com/package/typesafe-cli)
+[![Install size](https://packagephobia.com/badge?p=typesafe-cli)](https://www.npmjs.com/package/typesafe-cli)
+[![Minzipped size](https://img.shields.io/bundlephobia/minzip/typesafe-cli?style=flat)](https://www.npmjs.com/package/typesafe-cli)
+[![Downloads/month](https://img.shields.io/npm/dm/typesafe-cli.svg?style=flat)](https://www.npmjs.com/package/typesafe-cli)
+
 # TypeSafe
 TypeSafe is (technically) a 'language' created solely to bring Python-like type hints to JavaScript, at runtime. This 'compiler' simply takes your TypeSafe code and converts it to valid JavaScript code **with proper runtime type checking**.
 
