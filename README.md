@@ -9,7 +9,7 @@ TypeSafe is (technically) a 'language' created solely to bring Python-like type 
 ## How does it work?
 
 ## Syntax
-The syntax is stolen from Python's type hints and TypeScript, the main difference between this and TypeScript is simply when and how the type checking occurs. In TypeSafe, valid vanilla JavaScript type checking is injected into your code, replacing the type hints.
+The syntax is stolen from Python's type hints and TypeScript. The main difference between TypeSafe and TypeScript being simply when and how the type checking occurs: in TypeSafe, valid vanilla JavaScript type checking is _injected_ into your code, _replacing_ the type hints.
 
 TypeSafe uses colons followed by a type name to allow type checking.
 Type hints can be placed after any variable or parameter name, and after a function declaration.
@@ -39,17 +39,19 @@ function multiply(x: number, y: number): number {
 This project is a work-in-progress, it is not yet even _near_ close to completion.
 
 ### Current capabilities
- - Variable declarations: The compiler can currently add proper type checking for single variable _declarations_ (will not work when multiple variables are declared using commas, also will not work for more complex assignments such as multiline functions, chained expressions, etc). This solely means checking that a variable is the correct type _after_ it is declared. In future this will aim to check type on every assignment operation (although this will dramatically increase bloat...).
- - Basic functions: The compiler can currently add proper type checking for a basic function declaration, including parameters and a return type. This does not include lambda (squid) functions.
+ - Variable declarations: The compiler can currently add proper type checking for single variable _declarations_ (will not work when multiple variables are declared using commas, also will not work for more complex assignments such as multiline functions, chained expressions, etc). This solely means checking that a variable is the correct type _after_ it is declared. In future this will likely aim to check type on every assignment operation (although this will dramatically increase bloat...).
+ - Basic functions: The compiler can currently add proper type checking for a basic function declaration, including parameters and a return type. This does not include lambda (or squid) functions.
+
+### Work-in-progress
+ - Arrays: The compiler should be able to perform type checking for arrays, allowing statically typed arrays.
 
 ### Future capabilities
  - For loops: The compiler should be able to perform type checking for variables declared inside of any `for` loop.
- - Arrays: The compiler should be able to perform type checking for arrays, allowing statically typed arrays.
 
 ## Pros and Cons
-### Why use TypeSafe?
-This project is for fun, in reality there is likely little to no real reason to ever use TypeSafe for your own projects, if you find one, let me know!
- - Runtime type checking: TypeSafe will enable you to get proper runtime errors for invalid types. In theory though, if you use TypeScript or something similar, these issues should never arise.
+### Why should you use TypeSafe?
+This project is for fun, in reality there is likely little to no real reason to ever use TypeSafe for your own projects, if you think of one, let me know!
+ - Runtime type checking: TypeSafe will enable you to get proper runtime errors for invalid types. In theory though, if you use TypeScript or something similar, these issues should never arise in the first place, avoiding the bloat that TypeSafe would introduce.
 
-### Why not use TypeSafe?
- - File sizes: TypeSafe will only increase your file sizes, and the code you write, the more significantly your file size will increase.
+### Why shouldn't you use TypeSafe?
+ - File sizes: TypeSafe **will** increase your file sizes; the more code you write, the more significantly your file size will increase.
