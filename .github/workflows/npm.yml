@@ -29,9 +29,10 @@ jobs:
           check-latest: true
           registry-url: https://registry.npmjs.org/
           scope: "@matthewjames/typesafe-cli"
-      - run: cp ../README.md ./
-      - run: npm ci
-      - run: npm publish --access=public
+      - run: |
+          cp ../README.md ./
+          npm ci
+          npm publish --access=public
+          rm ./README.md
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: rm ./README.md
