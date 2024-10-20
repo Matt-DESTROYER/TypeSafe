@@ -33,6 +33,5 @@ jobs:
           cp ../README.md ./
           npm ci
           npm publish --access=public
-          rm ./README.md
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
