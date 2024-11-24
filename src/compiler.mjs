@@ -79,11 +79,11 @@ function parse_variable(content) {
 	})();
 	// if it isn't, don't change the content (who knows what we've been given...)
 	if (declaration_start === -1) {
-		return {
+		return Object.freeze({
 			result: content,
 			name: null,
 			type: null
-		};
+		});
 	}
 	// find type definition's start
 	const type_begin = content.indexOf(":", declaration_start);
