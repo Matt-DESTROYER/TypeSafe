@@ -16,8 +16,10 @@ jobs:
         with:
           node-version: lts/*
           check-latest: true
-      - run: npm ci
-      - run: npm test
+      - run: |
+          . ./build.sh
+          npm ci
+          npm test
   publish:
     needs: test
     runs-on: ubuntu-latest
@@ -35,3 +37,4 @@ jobs:
           npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
