@@ -17,7 +17,6 @@ jobs:
           node-version: lts/*
           check-latest: true
       - run: |
-          . ./build.sh
           npm ci
           npm test
   publish:
