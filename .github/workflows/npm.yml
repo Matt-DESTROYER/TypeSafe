@@ -30,7 +30,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
           scope: "@matthewjames/typesafe-cli"
       - run: |
-          cp ../README.md ./
+          . ./build.sh
           npm ci
           npm publish --access=public
         env:
