@@ -1,7 +1,10 @@
-mkdir ../bin
+mkdir ./bin
 
-cp ./compiler.mjs ../bin
-cp ./cli-tool.mjs ../bin
+mv ./compiler.mjs ./bin
+mv ./cli-tool.mjs ./bin
 
-cp ../README.md ./
+mv ../README.md ./
+
+rm -rf ./tests
+rm ./build.sh
 
